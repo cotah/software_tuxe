@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Bell, Calendar, Home, Package, Search, Users, Wrench } from 'lucide-react'
+import { BarChart3, Bell, Brain, Calendar, Home, Package, Search, Users, Wrench } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useCommandBarStore } from '@/store/commandBarStore'
@@ -15,6 +15,8 @@ const navItems = [
   { href: '/orders', label: 'Orders', icon: <Wrench className="h-5 w-5" /> },
   { href: '/agenda', label: 'Agenda', icon: <Calendar className="h-5 w-5" /> },
   { href: '/inventory', label: 'Inventory', icon: <Package className="h-5 w-5" /> },
+  { href: '/data', label: 'Data', icon: <BarChart3 className="h-5 w-5" /> },
+  { href: '/ai', label: 'AI', icon: <Brain className="h-5 w-5" /> },
 ]
 
 function useOutsideClose(open: boolean, onClose: () => void) {

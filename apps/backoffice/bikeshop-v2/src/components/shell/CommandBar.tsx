@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Home, Settings, Users, Wrench, Package } from 'lucide-react'
+import { BarChart3, Brain, Home, Package, Settings, Users, Wrench } from 'lucide-react'
 import {
   CommandDialog,
   CommandEmpty,
@@ -19,6 +19,8 @@ const actions = [
   { label: 'Ver Ordens de Servico', href: '/orders', icon: Wrench },
   { label: 'Clientes', href: '/customers', icon: Users },
   { label: 'Estoque', href: '/inventory', icon: Package },
+  { label: 'Data', href: '/data', icon: BarChart3 },
+  { label: 'AI', href: '/ai', icon: Brain },
   { label: 'Configuracoes', href: '/settings', icon: Settings },
 ]
 
