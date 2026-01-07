@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { CommandBar } from "@/components/CommandBar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,7 +33,6 @@ export default function RootLayout({
         <QueryProvider>
           <TooltipProvider>
             {children}
-            <CommandBar />
           </TooltipProvider>
         </QueryProvider>
       </body>
