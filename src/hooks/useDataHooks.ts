@@ -1,7 +1,8 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { orders, alerts, timeline, insights, dashboard, customers } from '@/lib/api'
+import { orders, alerts, timeline, insights, dashboard, customers, analytics } from '@/lib/api'
+import { AnalyticsRange } from '@/types'
 
 export function useOrders() {
   return useQuery({
@@ -85,5 +86,16 @@ export function useCustomerOrders(customerId: string) {
     queryKey: ['customers', customerId, 'orders'],
     queryFn: () => customers.ordersByCustomer(customerId),
     enabled: !!customerId,
+  })
+}
+
+export function useAnalyticsSummary(
+  range: AnalyticsRange,
+  status?: string,
+  channel?: string
+) {
+  return useQuery({
+    queryKey: ['analytics', 'summary', range, status, channel],
+    queryFn: () => analytics.getSummary({ range, status, channel }),
   })
 }
