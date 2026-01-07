@@ -71,3 +71,19 @@ export function useCustomers() {
     queryFn: customers.list,
   })
 }
+
+export function useCustomer(id: string) {
+  return useQuery({
+    queryKey: ['customers', id],
+    queryFn: () => customers.getById(id),
+    enabled: !!id,
+  })
+}
+
+export function useCustomerOrders(customerId: string) {
+  return useQuery({
+    queryKey: ['customers', customerId, 'orders'],
+    queryFn: () => customers.ordersByCustomer(customerId),
+    enabled: !!customerId,
+  })
+}

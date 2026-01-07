@@ -1,4 +1,4 @@
-import { Order, OrderDetail, AlertItem, TimelineEvent, Insight, CustomerListItem } from '@/types'
+import { Order, OrderDetail, AlertItem, TimelineEvent, Insight, CustomerListItem, CustomerDetail } from '@/types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || ''
 
@@ -566,9 +566,78 @@ const customersData: CustomerListItem[] = [
   },
 ]
 
+const customerDetailsData: Record<string, CustomerDetail> = {
+  c1: { ...customersData[0], phone: '(11) 99999-1234', createdAt: '2023-06-15T10:00:00Z' },
+  c2: { ...customersData[1], phone: '(11) 98888-5678', createdAt: '2023-09-20T14:00:00Z' },
+  c3: { ...customersData[2], phone: '(11) 97777-9012', createdAt: '2023-03-10T09:00:00Z' },
+  c4: { ...customersData[3], phone: '(11) 96666-3456', createdAt: '2023-11-05T11:00:00Z' },
+  c5: { ...customersData[4], phone: '(11) 95555-7890', createdAt: '2024-01-02T16:00:00Z' },
+  c6: { ...customersData[5], phone: '(11) 94444-1234', createdAt: '2023-08-25T10:00:00Z' },
+  c7: { ...customersData[6], phone: '(11) 93333-5678', createdAt: '2023-05-12T15:00:00Z' },
+  c8: { ...customersData[7], phone: '(11) 92222-9012', createdAt: '2023-12-01T09:00:00Z' },
+  c9: { ...customersData[8], phone: '(11) 91111-3456', createdAt: '2023-10-18T14:00:00Z' },
+}
+
+const customerOrdersData: Record<string, Order[]> = {
+  c1: [
+    { id: '1', status: 'ready', promisedAt: '2024-01-10T16:00:00Z', createdAt: '2024-01-08T09:00:00Z', total: 450, customerName: 'João Silva', bikeLabel: 'Caloi Elite 2.4', serviceSummary: 'Revisão geral', notified: false },
+    { id: '10', status: 'ready', promisedAt: '2023-12-15T14:00:00Z', createdAt: '2023-12-12T10:00:00Z', total: 280, customerName: 'João Silva', bikeLabel: 'Caloi Elite 2.4', serviceSummary: 'Troca de pneu', notified: true },
+    { id: '11', status: 'ready', promisedAt: '2023-10-20T11:00:00Z', createdAt: '2023-10-18T09:00:00Z', total: 320, customerName: 'João Silva', bikeLabel: 'Caloi Elite 2.4', serviceSummary: 'Ajuste de câmbio', notified: true },
+    { id: '12', status: 'ready', promisedAt: '2023-08-05T16:00:00Z', createdAt: '2023-08-02T14:00:00Z', total: 200, customerName: 'João Silva', bikeLabel: 'Caloi Elite 2.4', serviceSummary: 'Troca de corrente', notified: true },
+  ],
+  c2: [
+    { id: '2', status: 'ready', promisedAt: '2024-01-10T17:00:00Z', createdAt: '2024-01-09T10:00:00Z', total: 280, customerName: 'Maria Santos', bikeLabel: 'Trek Marlin 7', serviceSummary: 'Troca de pneu', notified: true },
+  ],
+  c3: [
+    { id: '3', status: 'in_progress', promisedAt: '2024-01-11T10:00:00Z', createdAt: '2024-01-09T14:00:00Z', total: 620, customerName: 'Pedro Costa', bikeLabel: 'Specialized Rockhopper', serviceSummary: 'Manutenção freios + câmbio', notified: false },
+    { id: '13', status: 'ready', promisedAt: '2023-12-20T10:00:00Z', createdAt: '2023-12-18T09:00:00Z', total: 450, customerName: 'Pedro Costa', bikeLabel: 'Specialized Rockhopper', serviceSummary: 'Revisão completa', notified: true },
+    { id: '14', status: 'ready', promisedAt: '2023-11-10T14:00:00Z', createdAt: '2023-11-08T11:00:00Z', total: 380, customerName: 'Pedro Costa', bikeLabel: 'Specialized Rockhopper', serviceSummary: 'Troca de suspensão', notified: true },
+    { id: '15', status: 'ready', promisedAt: '2023-09-25T16:00:00Z', createdAt: '2023-09-22T10:00:00Z', total: 290, customerName: 'Pedro Costa', bikeLabel: 'Specialized Rockhopper', serviceSummary: 'Sangria de freios', notified: true },
+    { id: '16', status: 'ready', promisedAt: '2023-07-15T11:00:00Z', createdAt: '2023-07-12T09:00:00Z', total: 200, customerName: 'Pedro Costa', bikeLabel: 'Specialized Rockhopper', serviceSummary: 'Centragem de rodas', notified: true },
+    { id: '17', status: 'ready', promisedAt: '2023-05-20T14:00:00Z', createdAt: '2023-05-18T10:00:00Z', total: 220, customerName: 'Pedro Costa', bikeLabel: 'Specialized Rockhopper', serviceSummary: 'Troca de cassete', notified: true },
+    { id: '18', status: 'ready', promisedAt: '2023-03-30T16:00:00Z', createdAt: '2023-03-28T11:00:00Z', total: 180, customerName: 'Pedro Costa', bikeLabel: 'Specialized Rockhopper', serviceSummary: 'Lubrificação', notified: true },
+  ],
+  c4: [
+    { id: '4', status: 'in_progress', promisedAt: '2024-01-11T14:00:00Z', createdAt: '2024-01-10T08:00:00Z', total: 150, customerName: 'Ana Oliveira', bikeLabel: 'Sense Impact Pro', serviceSummary: 'Ajuste de câmbio', notified: false },
+    { id: '19', status: 'ready', promisedAt: '2023-12-05T10:00:00Z', createdAt: '2023-12-03T09:00:00Z', total: 420, customerName: 'Ana Oliveira', bikeLabel: 'Sense Impact Pro', serviceSummary: 'Revisão geral', notified: true },
+    { id: '20', status: 'ready', promisedAt: '2023-11-20T14:00:00Z', createdAt: '2023-11-18T10:00:00Z', total: 320, customerName: 'Ana Oliveira', bikeLabel: 'Sense Impact Pro', serviceSummary: 'Troca de freios', notified: true },
+  ],
+  c5: [
+    { id: '5', status: 'waiting', promisedAt: '2024-01-12T09:00:00Z', createdAt: '2024-01-10T09:00:00Z', total: 890, customerName: 'Lucas Ferreira', bikeLabel: 'Scott Scale 970', serviceSummary: 'Suspensão + Revisão completa', notified: false },
+  ],
+  c6: [
+    { id: '21', status: 'ready', promisedAt: '2023-11-22T11:00:00Z', createdAt: '2023-11-20T11:00:00Z', total: 250, customerName: 'Fernanda Lima', bikeLabel: 'Oggi 7.0', serviceSummary: 'Troca de corrente', notified: true },
+    { id: '22', status: 'ready', promisedAt: '2023-09-10T14:00:00Z', createdAt: '2023-09-08T10:00:00Z', total: 200, customerName: 'Fernanda Lima', bikeLabel: 'Oggi 7.0', serviceSummary: 'Ajuste geral', notified: true },
+  ],
+  c7: [
+    { id: '7', status: 'waiting', promisedAt: '2024-01-12T16:00:00Z', createdAt: '2024-01-10T14:00:00Z', total: 180, customerName: 'Ricardo Alves', bikeLabel: 'Cannondale Trail', serviceSummary: 'Centragem de rodas', notified: false },
+    { id: '23', status: 'ready', promisedAt: '2023-12-28T10:00:00Z', createdAt: '2023-12-26T09:00:00Z', total: 450, customerName: 'Ricardo Alves', bikeLabel: 'Cannondale Trail', serviceSummary: 'Revisão completa', notified: true },
+    { id: '24', status: 'ready', promisedAt: '2023-11-15T14:00:00Z', createdAt: '2023-11-13T10:00:00Z', total: 380, customerName: 'Ricardo Alves', bikeLabel: 'Cannondale Trail', serviceSummary: 'Troca de pneus', notified: true },
+    { id: '25', status: 'ready', promisedAt: '2023-09-20T11:00:00Z', createdAt: '2023-09-18T09:00:00Z', total: 350, customerName: 'Ricardo Alves', bikeLabel: 'Cannondale Trail', serviceSummary: 'Freios + Câmbio', notified: true },
+    { id: '26', status: 'ready', promisedAt: '2023-07-05T16:00:00Z', createdAt: '2023-07-03T10:00:00Z', total: 320, customerName: 'Ricardo Alves', bikeLabel: 'Cannondale Trail', serviceSummary: 'Suspensão', notified: true },
+  ],
+  c8: [
+    { id: '8', status: 'ready', promisedAt: '2024-01-10T18:00:00Z', createdAt: '2024-01-10T15:00:00Z', total: 95, customerName: 'Carla Mendes', bikeLabel: 'Groove Hype 50', serviceSummary: 'Troca de câmara', notified: false },
+    { id: '27', status: 'ready', promisedAt: '2023-12-20T14:00:00Z', createdAt: '2023-12-18T10:00:00Z', total: 225, customerName: 'Carla Mendes', bikeLabel: 'Groove Hype 50', serviceSummary: 'Ajuste geral', notified: true },
+  ],
+  c9: [
+    { id: '9', status: 'in_progress', promisedAt: '2024-01-09T18:00:00Z', createdAt: '2024-01-07T10:00:00Z', total: 750, customerName: 'Marcos Souza', bikeLabel: 'Giant Talon 2', serviceSummary: 'Revisão completa + troca de componentes', notified: false },
+  ],
+}
+
 export const customers = {
   list: async (): Promise<CustomerListItem[]> => {
     await new Promise((res) => setTimeout(res, 500))
     return customersData
+  },
+
+  getById: async (id: string): Promise<CustomerDetail | null> => {
+    await new Promise((res) => setTimeout(res, 300))
+    return customerDetailsData[id] || null
+  },
+
+  ordersByCustomer: async (customerId: string): Promise<Order[]> => {
+    await new Promise((res) => setTimeout(res, 400))
+    return customerOrdersData[customerId] || []
   },
 }

@@ -26,6 +26,11 @@ export type CustomerListItem = {
   ordersCount: number
 }
 
+export type CustomerDetail = CustomerListItem & {
+  phone: string
+  createdAt: string
+}
+
 export type Bike = {
   id: string
   brand: string

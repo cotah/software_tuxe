@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Mail, ChevronRight, CheckCircle, Clock, AlertCircle } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -98,10 +99,12 @@ export function CustomerCard({ customer }: CustomerCardProps) {
             </div>
           </div>
 
-          <Button variant="ghost" size="sm" className="text-muted-foreground" disabled>
-            Ver perfil
-            <ChevronRight className="h-4 w-4 ml-1" />
-          </Button>
+          <Link href={`/customers/${customer.id}`}>
+            <Button variant="ghost" size="sm" className="text-muted-foreground">
+              Ver perfil
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>
