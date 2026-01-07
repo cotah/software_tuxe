@@ -1,5 +1,31 @@
 import { Order, OrderDetail, AlertItem, TimelineEvent, Insight } from '@/types'
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || ''
+
+// Local storage key for notified orders fallback
+const NOTIFIED_ORDERS_KEY = 'btrix_notified_orders'
+
+function getNotifiedOrdersFromStorage(): Set<string> {
+  if (typeof window === 'undefined') return new Set()
+  try {
+    const stored = localStorage.getItem(NOTIFIED_ORDERS_KEY)
+    return stored ? new Set(JSON.parse(stored)) : new Set()
+  } catch {
+    return new Set()
+  }
+}
+
+function saveNotifiedOrderToStorage(orderId: string): void {
+  if (typeof window === 'undefined') return
+  try {
+    const current = getNotifiedOrdersFromStorage()
+    current.add(orderId)
+    localStorage.setItem(NOTIFIED_ORDERS_KEY, JSON.stringify(Array.from(current)))
+  } catch {
+    // Ignore storage errors
+  }
+}
+
 const ordersData: OrderDetail[] = [
   {
     id: '1',
@@ -269,6 +295,7 @@ const ordersData: OrderDetail[] = [
 export const orders = {
   list: async (): Promise<Order[]> => {
     await new Promise((res) => setTimeout(res, 500))
+    const notifiedFromStorage = getNotifiedOrdersFromStorage()
     return ordersData.map((order) => ({
       id: order.id,
       status: order.status,
@@ -278,7 +305,7 @@ export const orders = {
       customerName: order.customerName,
       bikeLabel: order.bikeLabel,
       serviceSummary: order.serviceSummary,
-      notified: order.notified,
+      notified: order.notified || notifiedFromStorage.has(order.id),
       customer: order.customer,
       bike: order.bike,
     }))
@@ -286,7 +313,47 @@ export const orders = {
 
   getById: async (id: string): Promise<OrderDetail | null> => {
     await new Promise((res) => setTimeout(res, 300))
-    return ordersData.find((order) => order.id === id) || null
+    const order = ordersData.find((order) => order.id === id)
+    if (!order) return null
+    const notifiedFromStorage = getNotifiedOrdersFromStorage()
+    return {
+      ...order,
+      notified: order.notified || notifiedFromStorage.has(order.id),
+    }
+  },
+
+  notify: async (id: string): Promise<{ success: boolean }> => {
+    // TODO: Replace with real API call when backend endpoint is available
+    // Try backend first: PATCH /orders/:id { notified: true } or POST /orders/:id/notify
+    if (API_URL) {
+      try {
+        const response = await fetch(`${API_URL}/orders/${id}/notify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        })
+        if (response.ok) {
+          return { success: true }
+        }
+      } catch {
+        // Backend not available, fallback to local storage
+      }
+    }
+
+    // Fallback: persist to localStorage
+    await new Promise((res) => setTimeout(res, 200))
+    saveNotifiedOrderToStorage(id)
+    return { success: true }
+  },
+
+  search: async (query: string): Promise<Order[]> => {
+    const allOrders = await orders.list()
+    if (!query.trim()) return allOrders.slice(0, 20)
+    const lowerQuery = query.toLowerCase()
+    return allOrders.filter(
+      (order) =>
+        order.customerName.toLowerCase().includes(lowerQuery) ||
+        order.bikeLabel.toLowerCase().includes(lowerQuery)
+    ).slice(0, 20)
   },
 }
 
