@@ -1,18 +1,47 @@
-export type Order = {
+export type OrderStatus = 'in_progress' | 'waiting' | 'ready'
+
+export type ServiceItem = {
   id: string
-  status: 'in_progress' | 'waiting' | 'ready'
-  promisedAt: string
-  total: number
-  customerName: string
-  bikeLabel: string
-  serviceSummary: string
-  notified: boolean
+  name: string
+  price: number
+  quantity: number
 }
 
 export type Customer = {
   id: string
   name: string
   email: string
+  phone: string
+}
+
+export type Bike = {
+  id: string
+  brand: string
+  model: string
+  color: string
+  year?: number
+}
+
+export type Order = {
+  id: string
+  status: OrderStatus
+  promisedAt: string
+  createdAt: string
+  total: number
+  customerName: string
+  bikeLabel: string
+  serviceSummary: string
+  notified: boolean
+  customer?: Customer
+  bike?: Bike
+  services?: ServiceItem[]
+  notes?: string
+}
+
+export type OrderDetail = Order & {
+  customer: Customer
+  bike: Bike
+  services: ServiceItem[]
 }
 
 export type AlertItem = {

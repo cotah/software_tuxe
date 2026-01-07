@@ -10,6 +10,14 @@ export function useOrders() {
   })
 }
 
+export function useOrder(id: string) {
+  return useQuery({
+    queryKey: ['orders', id],
+    queryFn: () => orders.getById(id),
+    enabled: !!id,
+  })
+}
+
 export function useAlerts() {
   return useQuery({
     queryKey: ['alerts'],
