@@ -1,0 +1,40 @@
+{
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "create": "Criar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso"
+  },
+  "auth": {
+    "login": "Entrar",
+    "logout": "Sair",
+    "email": "E-mail",
+    "password": "Senha",
+    "forgotPassword": "Esqueceu a senha?",
+    "invalidCredentials": "Credenciais inválidas"
+  },
+  "orders": {
+    "title": "Pedidos",
+    "create": "Novo Pedido",
+    "status": {
+      "pending": "Pendente",
+      "confirmed": "Confirmado",
+      "preparing": "Preparando",
+      "ready": "Pronto",
+      "delivered": "Entregue",
+      "completed": "Concluído",
+      "cancelled": "Cancelado"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Bem-vindo"
+  }
+}
+
