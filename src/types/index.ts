@@ -14,6 +14,18 @@ export type Customer = {
   phone: string
 }
 
+export type CustomerStatus = 'active' | 'waiting' | 'inactive'
+
+export type CustomerListItem = {
+  id: string
+  name: string
+  email: string
+  status: CustomerStatus
+  lastOrderAt: string
+  totalSpent: number
+  ordersCount: number
+}
+
 export type Bike = {
   id: string
   brand: string

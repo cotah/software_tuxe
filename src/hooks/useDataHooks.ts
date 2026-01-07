@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { orders, alerts, timeline, insights, dashboard } from '@/lib/api'
+import { orders, alerts, timeline, insights, dashboard, customers } from '@/lib/api'
 
 export function useOrders() {
   return useQuery({
@@ -62,5 +62,12 @@ export function useDashboardSummary() {
   return useQuery({
     queryKey: ['dashboard-summary'],
     queryFn: dashboard.getSummary,
+  })
+}
+
+export function useCustomers() {
+  return useQuery({
+    queryKey: ['customers'],
+    queryFn: customers.list,
   })
 }

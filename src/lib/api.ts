@@ -1,4 +1,4 @@
-import { Order, OrderDetail, AlertItem, TimelineEvent, Insight } from '@/types'
+import { Order, OrderDetail, AlertItem, TimelineEvent, Insight, CustomerListItem } from '@/types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || ''
 
@@ -479,5 +479,96 @@ export const dashboard = {
       userName: 'Carlos',
       hasCritical: true,
     }
+  },
+}
+
+const customersData: CustomerListItem[] = [
+  {
+    id: 'c1',
+    name: 'João Silva',
+    email: 'joao.silva@email.com',
+    status: 'active',
+    lastOrderAt: '2024-01-09T14:00:00Z',
+    totalSpent: 1250,
+    ordersCount: 4,
+  },
+  {
+    id: 'c2',
+    name: 'Maria Santos',
+    email: 'maria.santos@email.com',
+    status: 'waiting',
+    lastOrderAt: '2024-01-05T10:00:00Z',
+    totalSpent: 280,
+    ordersCount: 1,
+  },
+  {
+    id: 'c3',
+    name: 'Pedro Costa',
+    email: 'pedro.costa@email.com',
+    status: 'active',
+    lastOrderAt: '2024-01-09T14:00:00Z',
+    totalSpent: 2340,
+    ordersCount: 7,
+  },
+  {
+    id: 'c4',
+    name: 'Ana Oliveira',
+    email: 'ana.oliveira@email.com',
+    status: 'active',
+    lastOrderAt: '2024-01-10T08:00:00Z',
+    totalSpent: 890,
+    ordersCount: 3,
+  },
+  {
+    id: 'c5',
+    name: 'Lucas Ferreira',
+    email: 'lucas.ferreira@email.com',
+    status: 'waiting',
+    lastOrderAt: '2024-01-10T09:00:00Z',
+    totalSpent: 890,
+    ordersCount: 1,
+  },
+  {
+    id: 'c6',
+    name: 'Fernanda Lima',
+    email: 'fernanda.lima@email.com',
+    status: 'inactive',
+    lastOrderAt: '2023-11-20T11:00:00Z',
+    totalSpent: 450,
+    ordersCount: 2,
+  },
+  {
+    id: 'c7',
+    name: 'Ricardo Alves',
+    email: 'ricardo.alves@email.com',
+    status: 'active',
+    lastOrderAt: '2024-01-10T14:00:00Z',
+    totalSpent: 1680,
+    ordersCount: 5,
+  },
+  {
+    id: 'c8',
+    name: 'Carla Mendes',
+    email: 'carla.mendes@email.com',
+    status: 'active',
+    lastOrderAt: '2024-01-10T15:00:00Z',
+    totalSpent: 320,
+    ordersCount: 2,
+  },
+  {
+    id: 'c9',
+    name: 'Marcos Souza',
+    email: 'marcos.souza@email.com',
+    status: 'waiting',
+    lastOrderAt: '2024-01-07T10:00:00Z',
+    totalSpent: 750,
+    ordersCount: 1,
+  },
+]
+
+export const customers = {
+  list: async (): Promise<CustomerListItem[]> => {
+    await new Promise((res) => setTimeout(res, 500))
+    return customersData
   },
 }
