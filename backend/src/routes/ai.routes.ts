@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import { aiController } from '../controllers/ai.controller';
+import { aiChatController } from '../controllers/aiChat.controller';
 import { aiSettingsController } from '../controllers/aiSettings.controller';
 import { authenticate, requireRole } from '../middleware/auth.middleware';
+import { aiChatLimiter } from '../middleware/rateLimiter';
 import { UserRole } from '@prisma/client';
 
 const router = Router();
@@ -15,6 +17,7 @@ router.post('/conversations/:conversationId/summarize', (req, res, next) =>
 router.post('/conversations/:conversationId/draft-reply', (req, res, next) =>
   aiController.draftReply(req as any, res, next)
 );
+router.post('/chat', aiChatLimiter, (req, res, next) => aiChatController.chat(req as any, res, next));
 
 router.get('/settings', requireRole(UserRole.ADMIN), (req, res, next) =>
   aiSettingsController.getSettings(req as any, res, next)

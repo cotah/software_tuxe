@@ -1,6 +1,7 @@
 import rateLimit from 'express-rate-limit';
 import { Request, Response } from 'express';
 import { logger } from '../utils/logger';
+import { AuthRequest } from './auth.middleware';
 
 // General API rate limiter
 export const apiLimiter = rateLimit({
@@ -38,9 +39,27 @@ export const webhookLimiter = rateLimit({
   message: 'Too many webhook requests, please slow down.',
 });
 
+// AI chat limiter (per tenant)
+export const aiChatLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 30, // 30 requests per minute
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req: Request) => {
+    const authReq = req as AuthRequest;
+    return authReq.companyId || (req.headers['x-tenant-id'] as string) || req.ip;
+  },
+  handler: (req: Request, res: Response) => {
+    res.status(429).json({
+      error: 'AI rate limit exceeded, please try again later.',
+    });
+  },
+});
+
 export default {
   apiLimiter,
   authLimiter,
   webhookLimiter,
+  aiChatLimiter,
 };
 

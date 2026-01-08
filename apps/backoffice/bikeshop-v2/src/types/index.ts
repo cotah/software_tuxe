@@ -176,3 +176,26 @@ export type CalendarConnection = {
   lastSyncedAt?: string
   errorMessage?: string
 }
+
+export type AiRole = 'user' | 'assistant' | 'system'
+
+export type AiChatMessage = {
+  role: AiRole
+  content: string
+}
+
+export type AiMessage = {
+  id: string
+  role: AiRole
+  content: string
+  createdAt: string
+}
+
+export type AiChatRequest = {
+  messages: AiChatMessage[]
+  context?: {
+    app?: string
+    userId?: string
+    tenantId?: string
+  }
+}
