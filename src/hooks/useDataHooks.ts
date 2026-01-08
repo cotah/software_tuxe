@@ -1,8 +1,8 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { orders, alerts, timeline, insights, dashboard, customers, analytics } from '@/lib/api'
-import { AnalyticsRange } from '@/types'
+import { orders, alerts, timeline, insights, dashboard, customers, analytics, appointments, calendarConnections } from '@/lib/api'
+import { AnalyticsRange, Appointment, CalendarProvider } from '@/types'
 
 export function useOrders() {
   return useQuery({
@@ -97,5 +97,64 @@ export function useAnalyticsSummary(
   return useQuery({
     queryKey: ['analytics', 'summary', range, status, channel],
     queryFn: () => analytics.getSummary({ range, status, channel }),
+  })
+}
+
+export function useAppointments(date: string) {
+  return useQuery({
+    queryKey: ['appointments', date],
+    queryFn: () => appointments.list({ date }),
+    enabled: !!date,
+  })
+}
+
+export function useCreateAppointment(currentDate: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (input: Omit<Appointment, 'id'>) => appointments.create(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['appointments', currentDate] })
+    },
+  })
+}
+
+export function useCalendarConnection() {
+  return useQuery({
+    queryKey: ['calendarConnection'],
+    queryFn: calendarConnections.get,
+  })
+}
+
+export function useConnectCalendar() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (provider: CalendarProvider) => calendarConnections.connect(provider),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['calendarConnection'] })
+    },
+  })
+}
+
+export function useDisconnectCalendar() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: () => calendarConnections.disconnect(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['calendarConnection'] })
+    },
+  })
+}
+
+export function useSyncCalendar() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: () => calendarConnections.sync(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['calendarConnection'] })
+    },
   })
 }

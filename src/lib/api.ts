@@ -1,4 +1,4 @@
-import { Order, OrderDetail, AlertItem, TimelineEvent, Insight, CustomerListItem, CustomerDetail, AnalyticsOrder, AnalyticsRange, AnalyticsSummary, AnalyticsOrderStatus } from '@/types'
+import { Order, OrderDetail, AlertItem, TimelineEvent, Insight, CustomerListItem, CustomerDetail, AnalyticsOrder, AnalyticsRange, AnalyticsSummary, AnalyticsOrderStatus, Appointment, CalendarConnection, CalendarProvider } from '@/types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || ''
 
@@ -794,5 +794,164 @@ export const analytics = {
       statusBreakdown,
       topServices,
     }
+  },
+}
+
+const appointmentsData: Appointment[] = [
+  {
+    id: 'apt1',
+    title: 'Entrega - João Silva',
+    type: 'pickup',
+    startAt: '2024-01-12T09:00:00Z',
+    endAt: '2024-01-12T09:30:00Z',
+    customerId: 'c1',
+    customerName: 'João Silva',
+    orderId: '1',
+    status: 'confirmed',
+  },
+  {
+    id: 'apt2',
+    title: 'Recebimento - Maria Santos',
+    type: 'dropoff',
+    startAt: '2024-01-12T10:00:00Z',
+    endAt: '2024-01-12T10:30:00Z',
+    customerId: 'c2',
+    customerName: 'Maria Santos',
+    status: 'confirmed',
+  },
+  {
+    id: 'apt3',
+    title: 'Revisão agendada - Pedro Costa',
+    type: 'review',
+    startAt: '2024-01-12T11:00:00Z',
+    endAt: '2024-01-12T12:00:00Z',
+    customerId: 'c3',
+    customerName: 'Pedro Costa',
+    orderId: '3',
+    notes: 'Cliente solicitou revisão completa',
+    status: 'pending',
+  },
+  {
+    id: 'apt4',
+    title: 'Ligação - Ana Oliveira',
+    type: 'call',
+    startAt: '2024-01-12T14:00:00Z',
+    endAt: '2024-01-12T14:15:00Z',
+    customerId: 'c4',
+    customerName: 'Ana Oliveira',
+    notes: 'Retornar sobre orçamento',
+    status: 'confirmed',
+  },
+  {
+    id: 'apt5',
+    title: 'Entrega - Lucas Ferreira',
+    type: 'pickup',
+    startAt: '2024-01-12T15:30:00Z',
+    endAt: '2024-01-12T16:00:00Z',
+    customerId: 'c5',
+    customerName: 'Lucas Ferreira',
+    orderId: '5',
+    status: 'confirmed',
+  },
+  {
+    id: 'apt6',
+    title: 'Recebimento - Ricardo Alves',
+    type: 'dropoff',
+    startAt: '2024-01-12T16:30:00Z',
+    endAt: '2024-01-12T17:00:00Z',
+    customerId: 'c7',
+    customerName: 'Ricardo Alves',
+    status: 'pending',
+  },
+]
+
+export const appointments = {
+  list: async (params: { date: string }): Promise<Appointment[]> => {
+    await new Promise((res) => setTimeout(res, 500))
+    const targetDate = params.date.split('T')[0]
+    return appointmentsData.filter((apt) => apt.startAt.startsWith(targetDate))
+  },
+
+  create: async (input: Omit<Appointment, 'id'>): Promise<Appointment> => {
+    await new Promise((res) => setTimeout(res, 600))
+    const newAppointment: Appointment = {
+      ...input,
+      id: `apt${Date.now()}`,
+    }
+    appointmentsData.push(newAppointment)
+    return newAppointment
+  },
+}
+
+let calendarConnectionState: CalendarConnection = {
+  id: 'cal1',
+  provider: 'native',
+  status: 'disconnected',
+}
+
+// Future API endpoints:
+// GET /integrations/calendar
+// POST /integrations/calendar/connect { provider }
+// POST /integrations/calendar/disconnect
+// POST /integrations/calendar/sync
+
+export const calendarConnections = {
+  get: async (): Promise<CalendarConnection> => {
+    await new Promise((res) => setTimeout(res, 400 + Math.random() * 500))
+    return { ...calendarConnectionState }
+  },
+
+  connect: async (provider: CalendarProvider): Promise<CalendarConnection> => {
+    await new Promise((res) => setTimeout(res, 800 + Math.random() * 400))
+
+    const shouldFail = Math.random() < 0.1
+    if (shouldFail) {
+      calendarConnectionState = {
+        id: 'cal1',
+        provider,
+        status: 'error',
+        errorMessage: 'Falha ao conectar. Tente novamente.',
+      }
+      return { ...calendarConnectionState }
+    }
+
+    calendarConnectionState = {
+      id: 'cal1',
+      provider,
+      status: 'connected',
+      accountLabel: 'carlos@btrix.dev',
+      lastSyncedAt: new Date().toISOString(),
+    }
+    return { ...calendarConnectionState }
+  },
+
+  disconnect: async (): Promise<CalendarConnection> => {
+    await new Promise((res) => setTimeout(res, 500))
+    calendarConnectionState = {
+      id: 'cal1',
+      provider: 'native',
+      status: 'disconnected',
+    }
+    return { ...calendarConnectionState }
+  },
+
+  sync: async (): Promise<CalendarConnection> => {
+    await new Promise((res) => setTimeout(res, 600))
+
+    const shouldNeedReauth = Math.random() < 0.1
+    if (shouldNeedReauth) {
+      calendarConnectionState = {
+        ...calendarConnectionState,
+        status: 'needs_reauth',
+      }
+      return { ...calendarConnectionState }
+    }
+
+    calendarConnectionState = {
+      ...calendarConnectionState,
+      status: 'connected',
+      lastSyncedAt: new Date().toISOString(),
+    }
+    return { ...calendarConnectionState }
   },
 }

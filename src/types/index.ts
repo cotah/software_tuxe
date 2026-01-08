@@ -140,3 +140,39 @@ export type AnalyticsOrder = {
   deliveredAt?: string
   channel: AnalyticsChannel
 }
+
+export type AppointmentType = 'dropoff' | 'pickup' | 'review' | 'call'
+
+export type AppointmentStatus = 'confirmed' | 'pending' | 'canceled'
+
+export type Appointment = {
+  id: string
+  title: string
+  type: AppointmentType
+  startAt: string
+  endAt: string
+  customerId?: string
+  customerName?: string
+  orderId?: string
+  notes?: string
+  status?: AppointmentStatus
+}
+
+export type CalendarProvider = 'google' | 'outlook' | 'calendly' | 'native'
+
+export type CalendarConnectionStatus =
+  | 'disconnected'
+  | 'connecting'
+  | 'connected'
+  | 'syncing'
+  | 'needs_reauth'
+  | 'error'
+
+export type CalendarConnection = {
+  id: string
+  provider: CalendarProvider
+  status: CalendarConnectionStatus
+  accountLabel?: string
+  lastSyncedAt?: string
+  errorMessage?: string
+}
