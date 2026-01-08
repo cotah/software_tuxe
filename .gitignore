@@ -1,1 +1,13 @@
+# old apps
+apps/**/dist
+apps/**/bikeshop-v2-old
+
+# backend
+backend/.env
+backend/dist
+backend/logs
+
+# node
 node_modules
+.env*
+
