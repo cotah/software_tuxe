@@ -14,6 +14,23 @@ export type Customer = {
   phone: string
 }
 
+export type CustomerStatus = 'active' | 'waiting' | 'inactive'
+
+export type CustomerListItem = {
+  id: string
+  name: string
+  email: string
+  status: CustomerStatus
+  lastOrderAt: string
+  totalSpent: number
+  ordersCount: number
+}
+
+export type CustomerDetail = CustomerListItem & {
+  phone: string
+  createdAt: string
+}
+
 export type Bike = {
   id: string
   brand: string
@@ -74,4 +91,52 @@ export type Insight = {
 export type Money = {
   amount: number
   currency: 'BRL'
+}
+
+export type AnalyticsRange = '7d' | '30d' | '90d'
+
+export type AnalyticsChannel = 'walk-in' | 'whatsapp' | 'instagram' | 'partner'
+
+export type AnalyticsOrderStatus = 'ready' | 'in_progress' | 'waiting' | 'delayed'
+
+export type AnalyticsKpis = {
+  revenue: number
+  orders: number
+  avgTicket: number
+  avgLeadTimeMin: number
+  delayedCount: number
+}
+
+export type RevenuePoint = {
+  date: string
+  revenue: number
+}
+
+export type StatusBreakdown = {
+  status: AnalyticsOrderStatus
+  count: number
+}
+
+export type TopServiceItem = {
+  name: string
+  count: number
+  revenue: number
+  avgTicket: number
+}
+
+export type AnalyticsSummary = {
+  kpis: AnalyticsKpis
+  revenueSeries: RevenuePoint[]
+  statusBreakdown: StatusBreakdown[]
+  topServices: TopServiceItem[]
+}
+
+export type AnalyticsOrder = {
+  id: string
+  status: AnalyticsOrderStatus
+  total: number
+  serviceName: string
+  createdAt: string
+  deliveredAt?: string
+  channel: AnalyticsChannel
 }

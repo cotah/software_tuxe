@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
-import { Truck, Check } from 'lucide-react'
+import { Truck, Check, Loader2 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Order } from '@/types'
+import { useNotifyOrder } from '@/hooks/useDataHooks'
 
 interface NextDeliveriesListProps {
   orders: Order[]
@@ -30,9 +30,7 @@ function formatDate(dateString: string): string {
 }
 
 export function NextDeliveriesList({ orders }: NextDeliveriesListProps) {
-  const [notifiedIds, setNotifiedIds] = useState<Set<string>>(
-    new Set(orders.filter((o) => o.notified).map((o) => o.id))
-  )
+  const notifyMutation = useNotifyOrder()
 
   const readyOrders = orders
     .filter((order) => order.status === 'ready')
@@ -41,11 +39,7 @@ export function NextDeliveriesList({ orders }: NextDeliveriesListProps) {
   const totalValue = readyOrders.reduce((acc, order) => acc + order.total, 0)
 
   const handleNotify = (orderId: string) => {
-    setNotifiedIds((prev) => {
-      const newSet = new Set(prev)
-      newSet.add(orderId)
-      return newSet
-    })
+    notifyMutation.mutate(orderId)
   }
 
   if (readyOrders.length === 0) {
@@ -67,7 +61,7 @@ export function NextDeliveriesList({ orders }: NextDeliveriesListProps) {
         <CardContent className="p-0">
           <ul className="divide-y divide-border">
             {readyOrders.map((order) => {
-              const isNotified = notifiedIds.has(order.id)
+              const isNotifying = notifyMutation.isPending && notifyMutation.variables === order.id
 
               return (
                 <li
@@ -97,7 +91,7 @@ export function NextDeliveriesList({ orders }: NextDeliveriesListProps) {
                     </p>
                   </div>
 
-                  {isNotified ? (
+                  {order.notified ? (
                     <Badge variant="success" className="gap-1">
                       <Check className="h-3 w-3" />
                       Avisado
@@ -107,8 +101,13 @@ export function NextDeliveriesList({ orders }: NextDeliveriesListProps) {
                       variant="outline"
                       size="sm"
                       onClick={() => handleNotify(order.id)}
+                      disabled={isNotifying}
                     >
-                      Avisar
+                      {isNotifying ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        'Avisar'
+                      )}
                     </Button>
                   )}
                 </li>
