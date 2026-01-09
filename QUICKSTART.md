@@ -50,6 +50,16 @@ Open http://localhost:3000
 - **Backend API**: http://localhost:3001
 - **Prisma Studio**: `cd backend && npm run db:studio`
 
+## Key Backoffice Pages
+
+- `/dashboard` - Command Center
+- `/orders` - Ordens de servico
+- `/customers` - Clientes
+- `/agenda` - Agenda
+- `/inventory` - Estoque
+- `/robots` - Robos / Atendentes
+- `/data` - Analytics
+
 ## 🎯 What You Can Do
 
 ### As Admin

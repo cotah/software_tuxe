@@ -44,6 +44,8 @@ The shared back-end provides:
 - **i18n**: react-i18next
 - **HTTP Client**: Axios
 - **Real-time**: Socket.IO client
+- **Backoffice App**: Next.js App Router with shared shell (TopBar + CommandBar + mobile drawer)
+- **Backoffice Routes**: /dashboard, /orders, /customers, /agenda, /inventory, /robots, /data
 
 ### 3. Database Schema
 

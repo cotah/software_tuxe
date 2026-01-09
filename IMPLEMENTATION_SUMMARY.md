@@ -216,3 +216,10 @@ npm run test:coverage # Coverage report
 - Multi-tenant isolation is enforced at the application level
 - Workflows are automatically created for each business type on first use
 
+## Recent Frontend Updates
+
+- Navigation updated with Estoque and Robos entries
+- New /robots route (placeholder monitoring)
+- Command Center timeline marker updated to bicycle icon
+- Post-update fixes for route wiring and shell navigation
+

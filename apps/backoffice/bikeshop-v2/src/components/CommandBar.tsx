@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { LayoutDashboard, FileText, Plus, Bike, Search, Calendar, Users, BarChart3, Package } from 'lucide-react'
+import { LayoutDashboard, FileText, Plus, Bike, Search, Calendar, Users, BarChart3, Package, Bot } from 'lucide-react'
 import {
   CommandDialog,
   CommandEmpty,
@@ -91,6 +91,10 @@ export function CommandBar() {
           <CommandItem onSelect={() => navigateTo('/inventory')}>
             <Package className="mr-2 h-4 w-4" />
             <span>Ver Estoque</span>
+          </CommandItem>
+          <CommandItem onSelect={() => navigateTo('/robots')}>
+            <Bot className="mr-2 h-4 w-4" />
+            <span>Ver Robôs</span>
           </CommandItem>
           {canCreateOrder ? (
             <Tooltip>

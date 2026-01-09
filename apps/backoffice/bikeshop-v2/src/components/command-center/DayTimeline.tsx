@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Calendar, Truck, MessageCircle, Clock } from 'lucide-react'
+import { Calendar, Truck, MessageCircle, Clock, Bike } from 'lucide-react'
 import {
   Tooltip,
   TooltipContent,
@@ -108,11 +108,12 @@ export function DayTimeline({ events }: DayTimelineProps) {
           <Tooltip>
             <TooltipTrigger asChild>
               <div
-                className="absolute top-0 bottom-0 w-0.5 bg-primary z-20 cursor-default"
+                className="absolute top-1/2 z-20 -translate-x-1/2 -translate-y-1/2"
                 style={{ left: `${markerPosition}%` }}
+                aria-label="Agora"
               >
-                <div className="absolute -top-1 left-1/2 -translate-x-1/2 px-1.5 py-0.5 bg-primary text-primary-foreground text-[10px] font-medium rounded whitespace-nowrap">
-                  AGORA
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
+                  <Bike className="h-4 w-4" />
                 </div>
               </div>
             </TooltipTrigger>
