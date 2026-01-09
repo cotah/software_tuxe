@@ -9,6 +9,7 @@ import {
   FileText,
   Calendar,
   BarChart3,
+  Brain,
   Package,
   Bot,
   Bell,
@@ -27,6 +28,7 @@ const navItems = [
   { href: '/customers', label: 'Clientes', icon: <Users className="h-5 w-5" /> },
   { href: '/agenda', label: 'Agenda', icon: <Calendar className="h-5 w-5" /> },
   { href: '/data', label: 'Data', icon: <BarChart3 className="h-5 w-5" /> },
+  { href: '/ai', label: 'AI', icon: <Brain className="h-5 w-5" /> },
   { href: '/inventory', label: 'Estoque', icon: <Package className="h-5 w-5" /> },
   { href: '/robots', label: 'Robôs', icon: <Bot className="h-5 w-5" /> },
 ]
