@@ -176,3 +176,31 @@ export type CalendarConnection = {
   lastSyncedAt?: string
   errorMessage?: string
 }
+
+// Inventory Types
+export type InventoryStatus = 'ok' | 'low' | 'out'
+
+export type InventoryItem = {
+  id: string
+  name: string
+  sku: string
+  category: string
+  qty: number
+  minQty: number
+  unitCost: number
+  unitPrice?: number
+  location?: string
+  updatedAt: string
+}
+
+export type StockMovementType = 'in' | 'out' | 'adjust'
+
+export type StockMovement = {
+  id: string
+  itemId: string
+  type: StockMovementType
+  qty: number
+  note?: string
+  createdAt: string
+  createdBy: string
+}
