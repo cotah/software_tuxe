@@ -1,4 +1,4 @@
-import { Order, OrderDetail, AlertItem, TimelineEvent, Insight, CustomerListItem, CustomerDetail, AnalyticsOrder, AnalyticsRange, AnalyticsSummary, AnalyticsOrderStatus, Appointment, CalendarConnection, CalendarProvider } from '@/types'
+import { Order, OrderDetail, AlertItem, TimelineEvent, Insight, CustomerListItem, CustomerDetail, AnalyticsOrder, AnalyticsRange, AnalyticsSummary, AnalyticsOrderStatus, Appointment, CalendarConnection, CalendarProvider, InventoryItem, StockMovement, StockMovementType } from '@/types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || ''
 
@@ -953,5 +953,241 @@ export const calendarConnections = {
       lastSyncedAt: new Date().toISOString(),
     }
     return { ...calendarConnectionState }
+  },
+}
+
+// Inventory Mock Data
+const inventoryData: InventoryItem[] = [
+  {
+    id: 'inv1',
+    name: 'Câmara de Ar 29"',
+    sku: 'CAM-29-001',
+    category: 'Câmaras',
+    qty: 1,
+    minQty: 5,
+    unitCost: 25,
+    unitPrice: 45,
+    location: 'Prateleira A1',
+    updatedAt: '2024-01-10T14:00:00Z',
+  },
+  {
+    id: 'inv2',
+    name: 'Câmara de Ar 26"',
+    sku: 'CAM-26-001',
+    category: 'Câmaras',
+    qty: 8,
+    minQty: 5,
+    unitCost: 22,
+    unitPrice: 40,
+    location: 'Prateleira A1',
+    updatedAt: '2024-01-09T10:00:00Z',
+  },
+  {
+    id: 'inv3',
+    name: 'Pneu Continental 29x2.2',
+    sku: 'PNE-CON-29',
+    category: 'Pneus',
+    qty: 4,
+    minQty: 3,
+    unitCost: 180,
+    unitPrice: 280,
+    location: 'Prateleira B2',
+    updatedAt: '2024-01-08T16:00:00Z',
+  },
+  {
+    id: 'inv4',
+    name: 'Pneu Vittoria 26x2.0',
+    sku: 'PNE-VIT-26',
+    category: 'Pneus',
+    qty: 0,
+    minQty: 2,
+    unitCost: 150,
+    unitPrice: 230,
+    location: 'Prateleira B2',
+    updatedAt: '2024-01-05T11:00:00Z',
+  },
+  {
+    id: 'inv5',
+    name: 'Corrente Shimano HG71 8v',
+    sku: 'COR-SHI-8V',
+    category: 'Transmissão',
+    qty: 6,
+    minQty: 4,
+    unitCost: 85,
+    unitPrice: 130,
+    location: 'Gaveta C1',
+    updatedAt: '2024-01-10T09:00:00Z',
+  },
+  {
+    id: 'inv6',
+    name: 'Corrente SRAM NX 12v',
+    sku: 'COR-SRA-12V',
+    category: 'Transmissão',
+    qty: 2,
+    minQty: 3,
+    unitCost: 180,
+    unitPrice: 280,
+    location: 'Gaveta C1',
+    updatedAt: '2024-01-07T14:00:00Z',
+  },
+  {
+    id: 'inv7',
+    name: 'Pastilha de Freio Shimano B01S',
+    sku: 'PAS-SHI-B01',
+    category: 'Freios',
+    qty: 12,
+    minQty: 8,
+    unitCost: 45,
+    unitPrice: 75,
+    location: 'Gaveta D2',
+    updatedAt: '2024-01-11T10:00:00Z',
+  },
+  {
+    id: 'inv8',
+    name: 'Pastilha de Freio Shimano D03S',
+    sku: 'PAS-SHI-D03',
+    category: 'Freios',
+    qty: 3,
+    minQty: 6,
+    unitCost: 55,
+    unitPrice: 90,
+    location: 'Gaveta D2',
+    updatedAt: '2024-01-06T15:00:00Z',
+  },
+  {
+    id: 'inv9',
+    name: 'Óleo de Suspensão RockShox 5wt',
+    sku: 'OLE-RSX-5W',
+    category: 'Lubrificantes',
+    qty: 5,
+    minQty: 2,
+    unitCost: 120,
+    unitPrice: 180,
+    location: 'Armário E1',
+    updatedAt: '2024-01-09T08:00:00Z',
+  },
+  {
+    id: 'inv10',
+    name: 'Óleo Lubrificante Finish Line',
+    sku: 'OLE-FIN-DRY',
+    category: 'Lubrificantes',
+    qty: 0,
+    minQty: 3,
+    unitCost: 65,
+    unitPrice: 95,
+    location: 'Armário E1',
+    updatedAt: '2024-01-04T12:00:00Z',
+  },
+  {
+    id: 'inv11',
+    name: 'Cabo de Câmbio Shimano',
+    sku: 'CAB-SHI-CAM',
+    category: 'Cabos',
+    qty: 15,
+    minQty: 10,
+    unitCost: 18,
+    unitPrice: 35,
+    location: 'Gaveta F1',
+    updatedAt: '2024-01-10T11:00:00Z',
+  },
+  {
+    id: 'inv12',
+    name: 'Cabo de Freio Shimano',
+    sku: 'CAB-SHI-FRE',
+    category: 'Cabos',
+    qty: 10,
+    minQty: 10,
+    unitCost: 15,
+    unitPrice: 30,
+    location: 'Gaveta F1',
+    updatedAt: '2024-01-08T09:00:00Z',
+  },
+]
+
+const stockMovementsData: StockMovement[] = [
+  { id: 'mov1', itemId: 'inv1', type: 'out', qty: 2, note: 'Usado em OS #1', createdAt: '2024-01-10T14:00:00Z', createdBy: 'Carlos' },
+  { id: 'mov2', itemId: 'inv1', type: 'out', qty: 1, note: 'Usado em OS #8', createdAt: '2024-01-09T16:00:00Z', createdBy: 'Carlos' },
+  { id: 'mov3', itemId: 'inv1', type: 'in', qty: 5, note: 'Compra fornecedor ABC', createdAt: '2024-01-08T10:00:00Z', createdBy: 'Carlos' },
+  { id: 'mov4', itemId: 'inv3', type: 'out', qty: 2, note: 'Usado em OS #2', createdAt: '2024-01-08T16:00:00Z', createdBy: 'Carlos' },
+  { id: 'mov5', itemId: 'inv5', type: 'in', qty: 10, note: 'Reposição de estoque', createdAt: '2024-01-10T09:00:00Z', createdBy: 'Carlos' },
+  { id: 'mov6', itemId: 'inv7', type: 'out', qty: 4, note: 'Usado em OS #3 e #4', createdAt: '2024-01-11T10:00:00Z', createdBy: 'Carlos' },
+  { id: 'mov7', itemId: 'inv4', type: 'out', qty: 2, note: 'Último estoque vendido', createdAt: '2024-01-05T11:00:00Z', createdBy: 'Carlos' },
+  { id: 'mov8', itemId: 'inv10', type: 'out', qty: 3, note: 'Esgotado', createdAt: '2024-01-04T12:00:00Z', createdBy: 'Carlos' },
+  { id: 'mov9', itemId: 'inv6', type: 'adjust', qty: -1, note: 'Ajuste de inventário', createdAt: '2024-01-07T14:00:00Z', createdBy: 'Carlos' },
+  { id: 'mov10', itemId: 'inv8', type: 'out', qty: 3, note: 'Vendido para cliente', createdAt: '2024-01-06T15:00:00Z', createdBy: 'Carlos' },
+]
+
+// Future API endpoints:
+// GET /inventory
+// GET /inventory/:id
+// GET /inventory/:id/movements
+// POST /inventory/:id/movements
+
+export const inventory = {
+  list: async (): Promise<InventoryItem[]> => {
+    await new Promise((res) => setTimeout(res, 400 + Math.random() * 300))
+    return [...inventoryData]
+  },
+
+  getById: async (id: string): Promise<InventoryItem | null> => {
+    await new Promise((res) => setTimeout(res, 300 + Math.random() * 200))
+    const item = inventoryData.find((i) => i.id === id)
+    return item ? { ...item } : null
+  },
+
+  movements: {
+    list: async (itemId: string): Promise<StockMovement[]> => {
+      await new Promise((res) => setTimeout(res, 400 + Math.random() * 300))
+      return stockMovementsData
+        .filter((m) => m.itemId === itemId)
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    },
+
+    create: async (payload: {
+      itemId: string
+      type: StockMovementType
+      qty: number
+      note?: string
+    }): Promise<StockMovement> => {
+      await new Promise((res) => setTimeout(res, 500 + Math.random() * 300))
+
+      const newMovement: StockMovement = {
+        id: `mov${Date.now()}`,
+        itemId: payload.itemId,
+        type: payload.type,
+        qty: payload.qty,
+        note: payload.note,
+        createdAt: new Date().toISOString(),
+        createdBy: 'Carlos',
+      }
+
+      stockMovementsData.unshift(newMovement)
+
+      // Update the inventory item quantity
+      const item = inventoryData.find((i) => i.id === payload.itemId)
+      if (item) {
+        if (payload.type === 'in') {
+          item.qty += payload.qty
+        } else if (payload.type === 'out') {
+          item.qty = Math.max(0, item.qty - payload.qty)
+        } else if (payload.type === 'adjust') {
+          item.qty = Math.max(0, item.qty + payload.qty)
+        }
+        item.updatedAt = new Date().toISOString()
+      }
+
+      return newMovement
+    },
+  },
+
+  updateMinQty: async (id: string, minQty: number): Promise<InventoryItem | null> => {
+    await new Promise((res) => setTimeout(res, 400))
+    const item = inventoryData.find((i) => i.id === id)
+    if (item) {
+      item.minQty = minQty
+      item.updatedAt = new Date().toISOString()
+      return { ...item }
+    }
+    return null
   },
 }

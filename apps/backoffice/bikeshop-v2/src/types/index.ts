@@ -177,25 +177,30 @@ export type CalendarConnection = {
   errorMessage?: string
 }
 
-export type AiRole = 'user' | 'assistant' | 'system'
+// Inventory Types
+export type InventoryStatus = 'ok' | 'low' | 'out'
 
-export type AiChatMessage = {
-  role: AiRole
-  content: string
-}
-
-export type AiMessage = {
+export type InventoryItem = {
   id: string
-  role: AiRole
-  content: string
-  createdAt: string
+  name: string
+  sku: string
+  category: string
+  qty: number
+  minQty: number
+  unitCost: number
+  unitPrice?: number
+  location?: string
+  updatedAt: string
 }
 
-export type AiChatRequest = {
-  messages: AiChatMessage[]
-  context?: {
-    app?: string
-    userId?: string
-    tenantId?: string
-  }
+export type StockMovementType = 'in' | 'out' | 'adjust'
+
+export type StockMovement = {
+  id: string
+  itemId: string
+  type: StockMovementType
+  qty: number
+  note?: string
+  createdAt: string
+  createdBy: string
 }
