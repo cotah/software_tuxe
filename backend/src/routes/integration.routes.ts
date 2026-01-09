@@ -14,6 +14,27 @@ router.get(
 );
 
 router.post(
+  '/:provider/connect',
+  authenticate,
+  requireRole(UserRole.ADMIN),
+  (req, res, next) => integrationController.connectIntegration(req, res, next)
+);
+
+router.post(
+  '/:provider/disconnect',
+  authenticate,
+  requireRole(UserRole.ADMIN),
+  (req, res, next) => integrationController.disconnectIntegration(req, res, next)
+);
+
+router.post(
+  '/:provider/sync',
+  authenticate,
+  requireRole(UserRole.ADMIN),
+  (req, res, next) => integrationController.syncProvider(req, res, next)
+);
+
+router.post(
   '/',
   authenticate,
   requireRole(UserRole.ADMIN),

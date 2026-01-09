@@ -26,6 +26,9 @@ class AIService {
             enabled: false,
             dailyTokenLimit: 0,
             defaultModel: env.defaultModel || 'gpt-4.1-mini',
+            provider: 'openai',
+            temperature: 0.2,
+            style: 'calm',
             allowSummarize: true,
             allowDraftReply: true,
           },
@@ -42,6 +45,9 @@ class AIService {
         enabled: false,
         dailyTokenLimit: 0,
         defaultModel: env.defaultModel || 'gpt-4.1-mini',
+        provider: 'openai',
+        temperature: 0.2,
+        style: 'calm',
         allowSummarize: true,
         allowDraftReply: true,
       } as any);
@@ -50,6 +56,9 @@ class AIService {
       enabled: (created as any).enabled ?? (created as any).enableAI ?? false,
       dailyTokenLimit: (created as any).dailyTokenLimit ?? (created as any).aiDailyLimit ?? 0,
       defaultModel: (created as any).defaultModel ?? (created as any).aiModel ?? env.defaultModel ?? 'gpt-4.1-mini',
+      provider: (created as any).provider ?? 'openai',
+      temperature: typeof (created as any).temperature === 'number' ? (created as any).temperature : 0.2,
+      style: (created as any).style ?? 'calm',
       allowSummarize: (created as any).allowSummarize ?? true,
       allowDraftReply: (created as any).allowDraftReply ?? true,
     };
@@ -168,7 +177,7 @@ class AIService {
         lead,
         messages,
         model: settings.defaultModel || env.defaultModel || 'gpt-4.1-mini',
-        temperature: 0.2,
+        temperature: settings.temperature ?? 0.2,
       });
     } catch (error: any) {
       await this.logUsage({
@@ -264,7 +273,7 @@ class AIService {
         lead: conversation.lead,
         messages,
         model: settings.defaultModel || env.defaultModel || 'gpt-4.1-mini',
-        temperature: 0.2,
+        temperature: settings.temperature ?? 0.2,
         locale: options?.locale || 'pt-BR',
         style: options?.style || 'short',
       });
@@ -358,7 +367,7 @@ class AIService {
         lead: conversation.lead,
         messages,
         model: settings.defaultModel || env.defaultModel || 'gpt-4.1-mini',
-        temperature: 0.2,
+        temperature: settings.temperature ?? 0.2,
         locale: options?.locale || 'pt-BR',
         goal: options?.goal || 'generic',
         tone: options?.tone || 'neutral',
@@ -414,6 +423,9 @@ class AIService {
       enabled: boolean;
       dailyTokenLimit: number;
       defaultModel: string;
+      provider: string;
+      temperature: number;
+      style: string;
       allowSummarize: boolean;
       allowDraftReply: boolean;
     }>
@@ -425,6 +437,9 @@ class AIService {
         enabled: data.enabled ?? existing.settings.enabled,
         dailyTokenLimit: data.dailyTokenLimit ?? existing.settings.dailyTokenLimit,
         defaultModel: data.defaultModel ?? existing.settings.defaultModel,
+        provider: data.provider ?? (existing.settings as any).provider ?? 'openai',
+        temperature: data.temperature ?? (existing.settings as any).temperature ?? 0.2,
+        style: data.style ?? (existing.settings as any).style ?? 'calm',
         allowSummarize: data.allowSummarize ?? existing.settings.allowSummarize,
         allowDraftReply: data.allowDraftReply ?? existing.settings.allowDraftReply,
       },
@@ -433,6 +448,9 @@ class AIService {
         enabled: data.enabled ?? existing.settings.enabled,
         dailyTokenLimit: data.dailyTokenLimit ?? existing.settings.dailyTokenLimit,
         defaultModel: data.defaultModel ?? existing.settings.defaultModel,
+        provider: data.provider ?? (existing.settings as any).provider ?? 'openai',
+        temperature: data.temperature ?? (existing.settings as any).temperature ?? 0.2,
+        style: data.style ?? (existing.settings as any).style ?? 'calm',
         allowSummarize: data.allowSummarize ?? existing.settings.allowSummarize,
         allowDraftReply: data.allowDraftReply ?? existing.settings.allowDraftReply,
       },

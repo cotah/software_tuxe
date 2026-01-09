@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
+import { useAiChat, useAiSettings } from '@/hooks/useDataHooks'
 
 type ChatMessage = {
   id: string
@@ -30,7 +31,10 @@ export function AiChatClient() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [conversationId, setConversationId] = useState<string | undefined>()
   const endRef = useRef<HTMLDivElement | null>(null)
+  const { data: settings } = useAiSettings()
+  const chatMutation = useAiChat()
 
   const canSend = useMemo(() => input.trim().length > 0 && !loading, [input, loading])
 
@@ -38,7 +42,16 @@ export function AiChatClient() {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
 
-  const sendMessage = () => {
+  const providerLabel = useMemo(() => {
+    const provider = settings?.provider || 'openai'
+    if (provider === 'anthropic') return 'Anthropic'
+    if (provider === 'google') return 'Google'
+    return 'OpenAI'
+  }, [settings?.provider])
+
+  const modelLabel = settings?.model || 'gpt-4.1-mini'
+
+  const sendMessage = async () => {
     if (!canSend) return
     setError(null)
 
@@ -49,24 +62,49 @@ export function AiChatClient() {
       createdAt: new Date().toISOString(),
     }
 
-    setMessages((prev) => [...prev, newMessage])
+    const nextMessages = [...messages, newMessage]
+    setMessages(nextMessages)
     setInput('')
     setLoading(true)
 
-    const reply = mockReplies[Math.floor(Math.random() * mockReplies.length)]
-
-    setTimeout(() => {
+    try {
+      const response = await chatMutation.mutateAsync({
+        conversationId,
+        messages: nextMessages.map((message) => ({
+          role: message.role,
+          content: message.content,
+        })),
+        context: {
+          app: 'bikeshop',
+          tenantId: 'demo-tenant',
+          userId: 'demo-user',
+        },
+      })
+      setConversationId(response.conversationId)
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: response.message.id,
+          role: 'assistant',
+          content: response.message.content,
+          createdAt: response.message.createdAt,
+        },
+      ])
+      setLoading(false)
+    } catch {
+      const fallback = mockReplies[Math.floor(Math.random() * mockReplies.length)]
+      setError('IA indisponivel. Resposta simulada exibida.')
       setMessages((prev) => [
         ...prev,
         {
           id: createId(),
           role: 'assistant',
-          content: reply,
+          content: fallback,
           createdAt: new Date().toISOString(),
         },
       ])
       setLoading(false)
-    }, 900)
+    }
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -88,6 +126,9 @@ export function AiChatClient() {
         <div>
           <h2 className="text-lg font-medium">AI</h2>
           <p className="text-sm text-muted-foreground">Converse sobre sua oficina e receba insights.</p>
+          <p className="text-xs text-muted-foreground">
+            {providerLabel} • {modelLabel}
+          </p>
         </div>
         <Button variant="ghost" size="sm" onClick={clearChat}>
           Limpar

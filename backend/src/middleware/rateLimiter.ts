@@ -47,7 +47,9 @@ export const aiChatLimiter = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req: Request) => {
     const authReq = req as AuthRequest;
-    return authReq.companyId || (req.headers['x-tenant-id'] as string) || req.ip;
+    const headerTenant = req.headers['x-tenant-id'];
+    const tenantId = authReq.companyId || (Array.isArray(headerTenant) ? headerTenant[0] : headerTenant);
+    return String(tenantId ?? req.ip ?? 'unknown');
   },
   handler: (req: Request, res: Response) => {
     res.status(429).json({

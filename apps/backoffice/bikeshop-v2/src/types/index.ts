@@ -204,3 +204,31 @@ export type StockMovement = {
   createdAt: string
   createdBy: string
 }
+
+export type IntegrationProvider = 'google_sheets' | 'microsoft_excel' | 'csv'
+
+export type IntegrationStatus = 'connected' | 'disconnected' | 'error'
+
+export type IntegrationItem = {
+  id?: string
+  provider: IntegrationProvider
+  status: IntegrationStatus
+  connectedAt?: string
+  lastSyncAt?: string
+  errorMessage?: string
+}
+
+export type AiProvider = 'openai' | 'anthropic' | 'google'
+
+export type AiStylePreset = 'calm' | 'direct' | 'coach'
+
+export type AiSettings = {
+  provider: AiProvider
+  model: string
+  defaultModel?: string
+  temperature: number
+  style: AiStylePreset
+  enabled: boolean
+}
+
+export type AiSettingsPayload = Partial<AiSettings>

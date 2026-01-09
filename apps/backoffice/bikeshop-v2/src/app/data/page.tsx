@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { DataDashboard } from '@/components/data/DataDashboard'
+import { DataIntegrationsPanel } from '@/components/data/DataIntegrationsPanel'
 
 export const metadata = {
   title: 'Data | BTRIX',
@@ -27,6 +28,8 @@ export default function DataPage() {
               Saúde do negócio
             </p>
           </div>
+
+          <DataIntegrationsPanel />
 
           <DataDashboard />
         </div>

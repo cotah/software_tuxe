@@ -29,12 +29,29 @@ class HttpClient {
     }
 
     const response = await fetch(`${this.baseUrl}${endpoint}`, config)
-
-    if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`)
+    const text = await response.text()
+    let data: unknown = null
+    if (text) {
+      try {
+        data = JSON.parse(text) as unknown
+      } catch {
+        data = text
+      }
     }
 
-    return response.json()
+    if (!response.ok) {
+      const errorData =
+        typeof data === 'object' && data !== null
+          ? (data as { message?: string; error?: string })
+          : null
+      const message =
+        errorData?.message || errorData?.error || text || `HTTP Error: ${response.status}`
+      const error = new Error(message)
+      ;(error as Error & { status?: number }).status = response.status
+      throw error
+    }
+
+    return data as T
   }
 
   get<T>(endpoint: string, headers?: Record<string, string>): Promise<T> {

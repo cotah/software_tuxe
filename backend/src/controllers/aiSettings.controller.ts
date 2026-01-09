@@ -17,11 +17,24 @@ export class AISettingsController {
   async updateSettings(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const tenantId = req.companyId!;
-      const { enabled, dailyTokenLimit, defaultModel, allowSummarize, allowDraftReply } = req.body;
-      const updated = await aiService.updateSettings(tenantId, {
+      const {
         enabled,
         dailyTokenLimit,
         defaultModel,
+        model,
+        allowSummarize,
+        allowDraftReply,
+        provider,
+        temperature,
+        style,
+      } = req.body;
+      const updated = await aiService.updateSettings(tenantId, {
+        enabled,
+        dailyTokenLimit,
+        defaultModel: defaultModel || model,
+        provider,
+        temperature,
+        style,
         allowSummarize,
         allowDraftReply,
       });

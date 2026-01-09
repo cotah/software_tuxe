@@ -165,6 +165,9 @@ enum IntegrationType {
   RAPPI
   BLING
   TINY_ERP
+  GOOGLE_SHEETS
+  MICROSOFT_EXCEL
+  CSV
   GENERIC
 }
 
@@ -717,6 +720,9 @@ model TenantAISettings {
   enabled           Boolean  @default(false)
   dailyTokenLimit   Int      @default(0)
   defaultModel      String   @default("gpt-4.1-mini")
+  provider          String   @default("openai")
+  temperature       Float    @default(0.2)
+  style             String   @default("calm")
   allowSummarize    Boolean  @default(true)
   allowDraftReply   Boolean  @default(true)
   createdAt         DateTime @default(now())

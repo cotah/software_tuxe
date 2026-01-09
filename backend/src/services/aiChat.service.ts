@@ -1,5 +1,6 @@
 import { AppError } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
+import prisma from '../utils/prisma';
 import { OpenAIChatProvider } from './ai/provider';
 
 type ChatMessage = {
@@ -31,16 +32,30 @@ class AIChatService {
   }
 
   async generateReply(tenantId: string, input: ChatRequest) {
+    const settings = await prisma.tenantAISettings.findUnique({ where: { tenantId } });
+    const providerName = settings?.provider || 'openai';
+    if (settings && settings.enabled === false) {
+      throw new AppError(403, 'AI is disabled');
+    }
+    if (providerName !== 'openai') {
+      throw new AppError(503, 'AI provider not configured');
+    }
+
     const provider = this.getProvider();
     if (!provider) {
       throw new AppError(503, 'AI not configured');
     }
 
-    const model = process.env.AI_MODEL || process.env.DEFAULT_AI_MODEL || 'gpt-4.1-mini';
+    const model =
+      settings?.defaultModel ||
+      process.env.AI_MODEL ||
+      process.env.DEFAULT_AI_MODEL ||
+      'gpt-4.1-mini';
+    const temperature = typeof settings?.temperature === 'number' ? settings.temperature : 0.2;
     const result = await provider.generateChatCompletion({
       messages: input.messages,
       model,
-      temperature: 0.2,
+      temperature,
     });
 
     const reply = (result.content || '').trim();

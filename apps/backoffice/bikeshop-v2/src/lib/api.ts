@@ -1,4 +1,5 @@
-import { Order, OrderDetail, AlertItem, TimelineEvent, Insight, CustomerListItem, CustomerDetail, AnalyticsOrder, AnalyticsRange, AnalyticsSummary, AnalyticsOrderStatus, Appointment, CalendarConnection, CalendarProvider, InventoryItem, StockMovement, StockMovementType } from '@/types'
+import { Order, OrderDetail, AlertItem, TimelineEvent, Insight, CustomerListItem, CustomerDetail, AnalyticsOrder, AnalyticsRange, AnalyticsSummary, AnalyticsOrderStatus, Appointment, CalendarConnection, CalendarProvider, InventoryItem, StockMovement, StockMovementType, IntegrationItem, IntegrationProvider, AiSettings, AiSettingsPayload } from '@/types'
+import { http } from '@/lib/http'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || ''
 
@@ -1189,5 +1190,62 @@ export const inventory = {
       return { ...item }
     }
     return null
+  },
+}
+
+type ApiResponse<T> = {
+  success: boolean
+  data: T
+  authUrl?: string
+}
+
+export const integrationsApi = {
+  list: async (): Promise<IntegrationItem[]> => {
+    const response = await http.get<ApiResponse<IntegrationItem[]>>('/integrations')
+    return response.data || []
+  },
+  connect: async (provider: IntegrationProvider): Promise<{ data: IntegrationItem; authUrl?: string }> => {
+    const response = await http.post<ApiResponse<IntegrationItem>>(`/integrations/${provider}/connect`, {})
+    return { data: response.data, authUrl: response.authUrl }
+  },
+  disconnect: async (provider: IntegrationProvider): Promise<IntegrationItem> => {
+    const response = await http.post<ApiResponse<IntegrationItem>>(`/integrations/${provider}/disconnect`, {})
+    return response.data
+  },
+  sync: async (provider: IntegrationProvider): Promise<IntegrationItem> => {
+    const response = await http.post<ApiResponse<IntegrationItem>>(`/integrations/${provider}/sync`, {})
+    return response.data
+  },
+}
+
+export const aiSettingsApi = {
+  get: async (): Promise<AiSettings> => {
+    const response = await http.get<ApiResponse<AiSettings>>('/ai/settings')
+    const data = response.data as AiSettings
+    return {
+      ...data,
+      model: data.model || data.defaultModel || 'gpt-4.1-mini',
+    }
+  },
+  save: async (payload: AiSettingsPayload): Promise<AiSettings> => {
+    const response = await http.patch<ApiResponse<AiSettings>>('/ai/settings', {
+      ...payload,
+      defaultModel: payload.defaultModel || payload.model,
+    })
+    const data = response.data as AiSettings
+    return {
+      ...data,
+      model: data.model || data.defaultModel || 'gpt-4.1-mini',
+    }
+  },
+}
+
+export const aiChatApi = {
+  send: async (payload: {
+    conversationId?: string
+    messages: { role: 'user' | 'assistant' | 'system'; content: string }[]
+    context?: { app?: string; userId?: string; tenantId?: string }
+  }): Promise<{ conversationId: string; message: { id: string; role: 'assistant'; content: string; createdAt: string } }> => {
+    return http.post('/ai/chat', payload)
   },
 }

@@ -1,8 +1,8 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { orders, alerts, timeline, insights, dashboard, customers, analytics, appointments, calendarConnections } from '@/lib/api'
-import { AnalyticsRange, Appointment, CalendarProvider } from '@/types'
+import { orders, alerts, timeline, insights, dashboard, customers, analytics, appointments, calendarConnections, integrationsApi, aiSettingsApi, aiChatApi } from '@/lib/api'
+import { AnalyticsRange, Appointment, CalendarProvider, IntegrationProvider, AiSettingsPayload } from '@/types'
 
 export function useOrders() {
   return useQuery({
@@ -156,5 +156,65 @@ export function useSyncCalendar() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['calendarConnection'] })
     },
+  })
+}
+
+export function useIntegrations() {
+  return useQuery({
+    queryKey: ['integrations'],
+    queryFn: integrationsApi.list,
+  })
+}
+
+export function useConnectIntegration() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (provider: IntegrationProvider) => integrationsApi.connect(provider),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['integrations'] })
+    },
+  })
+}
+
+export function useDisconnectIntegration() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (provider: IntegrationProvider) => integrationsApi.disconnect(provider),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['integrations'] })
+    },
+  })
+}
+
+export function useSyncIntegration() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (provider: IntegrationProvider) => integrationsApi.sync(provider),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['integrations'] })
+    },
+  })
+}
+
+export function useAiSettings() {
+  return useQuery({
+    queryKey: ['ai-settings'],
+    queryFn: aiSettingsApi.get,
+  })
+}
+
+export function useSaveAiSettings() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: AiSettingsPayload) => aiSettingsApi.save(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ai-settings'] })
+    },
+  })
+}
+
+export function useAiChat() {
+  return useMutation({
+    mutationFn: aiChatApi.send,
   })
 }
